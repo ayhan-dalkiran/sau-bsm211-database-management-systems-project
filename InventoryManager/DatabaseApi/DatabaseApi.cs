@@ -42,9 +42,4 @@ internal static partial class DatabaseApi {
 		//DatabaseApi.UpdateEmployeeView();
 		//DatabaseApi.UpdateWorkplaceView();
 	}
-
-	//public static async Task UpdateReceiptView() { }
-	//public static async Task UpdateShipmentView() { }
-	//public static async Task UpdateEmployeeView() { }
-	//public static async Task UpdateWorkplaceView() { }
 }
