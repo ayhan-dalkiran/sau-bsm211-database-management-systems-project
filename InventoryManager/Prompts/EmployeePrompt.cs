@@ -11,39 +11,6 @@ using System.Windows.Forms;
 namespace InventoryManager;
 public partial class EmployeePrompt : Form {
 	public RequestType RequestType { get; set; }
-	public Entity EntityObject {
-		get {
-			var entity = new Entity {
-				Id = Convert.ToInt32(this.entityIdBox.Text),
-				EntityName = this.entityNameBox.Text.Trim(),
-				TelephoneNumber = this.telephoneNumberBox.Text.Trim() != string.Empty ? this.telephoneNumberBox.Text : null,
-				Address = this.addressBox.Text.Trim() != string.Empty ? this.addressBox.Text : null,
-			};
-
-			return (EntityType)this.entityTypeBox.SelectedIndex switch {
-				EntityType.Undefined => entity,
-				EntityType.Company => new Company(entity, this.mersisIdBox.Text),
-				EntityType.Person => new Person(entity, this.nationalIdBox.Text),
-				_ => throw new InvalidEnumArgumentException(),
-			};
-		}
-		set {
-			this.entityIdBox.Text = Convert.ToString(value.Id);
-			this.entityNameBox.Text = value.EntityName;
-			this.telephoneNumberBox.Text = value.TelephoneNumber ?? string.Empty;
-			this.addressBox.Text = value.Address ?? string.Empty;
-			this.entityTypeBox.SelectedIndex = (int)value.EntityType;
-
-			switch (value.EntityType) {
-				case EntityType.Company:
-					this.mersisIdBox.Text = ((Company)value).MersisId;
-					break;
-				case EntityType.Person:
-					this.nationalIdBox.Text = ((Person)value).NationalId;
-					break;
-			}
-		}
-	}
 
 	public EmployeePrompt() {
 		InitializeComponent();
@@ -77,7 +44,7 @@ public partial class EmployeePrompt : Form {
 
 	private void EntityForm_Shown(object sender, EventArgs e) {
 		switch (this.RequestType) {
-			case RequestType.Add:
+			case RequestType.Insert:
 				this.entityTypeBox.SelectedIndex = (int)EntityType.Undefined;
 				break;
 			case RequestType.Update:

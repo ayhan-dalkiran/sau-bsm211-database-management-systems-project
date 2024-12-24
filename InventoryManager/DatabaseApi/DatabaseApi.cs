@@ -13,12 +13,19 @@ using NpgsqlTypes;
 
 namespace InventoryManager;
 internal static partial class DatabaseApi {
-	public static BindingSource ItemView { get; } = new();
-	public static BindingSource ReceiptView { get; } = new();
-	public static BindingSource ShipmentView { get; } = new();
-	public static BindingSource EntityView { get; } = new();
-	public static BindingSource EmployeeView { get; } = new();
-	public static BindingSource WorkplaceView { get; } = new();
+	public static BindingSource ItemAllSource { get; } = new();
+	public static BindingSource ItemOtherSource { get; } = new();
+	public static BindingSource FoodSource { get; } = new();
+	public static BindingSource ChemicalSource { get; } = new();
+	public static BindingSource ReceiptSource { get; } = new();
+	public static BindingSource ShipmentSource { get; } = new();
+	public static BindingSource EntityAllSource { get; } = new();
+	public static BindingSource CompanySource { get; } = new();
+	public static BindingSource PersonSource { get; } = new();
+	public static BindingSource EmployeeSource { get; } = new();
+	public static BindingSource WorkplaceAllSource { get; } = new();
+	public static BindingSource WarehouseSource { get; } = new();
+	public static BindingSource OfficeSource { get; } = new();
 
 	public static NpgsqlDataSourceBuilder Builder { get; } = new("""
 		Host=localhost;
@@ -35,11 +42,18 @@ internal static partial class DatabaseApi {
 	}
 
 	public static async Task UpdateViewBulk() {
-		await DatabaseApi.UpdateItemView();
-		//DatabaseApi.UpdateReceiptView();
-		//DatabaseApi.UpdateShipmentView();
-		await DatabaseApi.UpdateEntityView();
-		//DatabaseApi.UpdateEmployeeView();
-		//DatabaseApi.UpdateWorkplaceView();
+		ItemAllSource.DataSource =  await DatabaseApi.SelectItemAllViewBulk();
+		ItemOtherSource.DataSource = await DatabaseApi.SelectItemOtherViewBulk();
+		FoodSource.DataSource = await DatabaseApi.SelectFoodViewBulk();
+		ChemicalSource.DataSource = await DatabaseApi.SelectChemicalViewBulk();
+		ReceiptSource.DataSource = await DatabaseApi.SelectReceiptViewBulk();
+		ShipmentSource.DataSource = await DatabaseApi.SelectShipmentViewBulk();
+		EntityAllSource.DataSource = await DatabaseApi.SelectEntityAllViewBulk();
+		CompanySource.DataSource = await DatabaseApi.SelectCompanyViewBulk();
+		PersonSource.DataSource = await DatabaseApi.SelectPersonViewBulk();
+		EmployeeSource.DataSource = await DatabaseApi.SelectEmployeeViewBulk();
+		WorkplaceAllSource.DataSource = await DatabaseApi.SelectWorkplaceViewBulk();
+		WarehouseSource.DataSource = await DatabaseApi.SelectWarehouseViewBulk();
+		OfficeSource.DataSource = await DatabaseApi.SelectOfficeViewBulk();
 	}
 }

@@ -110,6 +110,7 @@ partial class PostgresqlDataGridView {
 		this.searchButton.TabIndex = 0;
 		this.searchButton.Text = "Ara";
 		this.searchButton.UseVisualStyleBackColor = true;
+		this.searchButton.Click += this.searchButton_Click;
 		// 
 		// searchBox
 		// 

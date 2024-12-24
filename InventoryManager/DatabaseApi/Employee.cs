@@ -16,10 +16,18 @@ internal static partial class DatabaseApi {
 	public static async Task<BindingList<EmployeeView>> SelectEmployeeViewBulk() {
 		await using var dataSource = Builder.Build();
 		await using var command = dataSource.CreateCommand("""
-			SELECT "employee_id", "employee_national_id","employee_name",
-			 "supervisor_id", "supervisor_name", "workplace_id", "workplace_name",
-			 "hire_date", "position", "wage"
-			FROM "public"."employee_view"
+			SELECT
+				"employee_id",
+				"employee_national_id",
+				"employee_name",
+				"workplace_id",
+				"workplace_name",
+				"supervisor_id",
+				"supervisor_name",
+				"hire_date",
+				"position",
+				"wage"
+			FROM "public"."employee_view";
 			""");
 
 		var list = new BindingList<EmployeeView>();
@@ -29,27 +37,35 @@ internal static partial class DatabaseApi {
 				EmployeeId = reader.GetInt32(0),
 				EmployeeNationalId = reader.GetString(1),
 				EmployeeName = reader.GetString(2),
-				SupervisorId = await reader.IsDBNullAsync(3) ? null : reader.GetInt32(3),
-				SupervisorName = await reader.IsDBNullAsync(4) ? null : reader.GetString(4),
-				WorkplaceId = reader.GetInt32(5),
-				WorkplaceName = reader.GetString(6),
+				WorkplaceId = reader.GetInt32(3),
+				WorkplaceName = reader.GetString(4),
+				SupervisorId = await reader.IsDBNullAsync(5) ? null : reader.GetInt32(5),
+				SupervisorName = await reader.IsDBNullAsync(6) ? null : reader.GetString(6),
 				HireDate = DateOnly.FromDateTime(reader.GetDateTime(7)),
 				Position = reader.GetString(8),
 				Wage = reader.GetDecimal(9),
 			};
 			list.Add(data);
 		}
-
 		return list;
 	}
 	public static async Task<EmployeeView> SelectEmployeeView(int employee_id) {
 		await using var dataSource = Builder.Build();
 		await using var command = dataSource.CreateCommand("""
-			SELECT "employee_id", "employee_national_id","employee_name",
-			 "supervisor_id", "supervisor_name", "workplace_id", "workplace_name",
-			 "hire_date", "position", "wage"
+			SELECT
+				"employee_id",
+				"employee_national_id",
+				"employee_name",
+				"workplace_id",
+				"workplace_name",
+				"supervisor_id",
+				"supervisor_name",
+				"hire_date",
+				"position",
+				"wage"
 			FROM "public"."employee_view"
-			WHERE "employee_id" = @employee_id
+			WHERE 
+				"employee_id" = @employee_id;
 			""");
 		command.Parameters.Add(new NpgsqlParameter<int>("employee_id", employee_id));
 
@@ -59,10 +75,10 @@ internal static partial class DatabaseApi {
 			EmployeeId = reader.GetInt32(0),
 			EmployeeNationalId = reader.GetString(1),
 			EmployeeName = reader.GetString(2),
-			SupervisorId = await reader.IsDBNullAsync(3) ? null : reader.GetInt32(3),
-			SupervisorName = await reader.IsDBNullAsync(4) ? null : reader.GetString(4),
-			WorkplaceId = reader.GetInt32(5),
-			WorkplaceName = reader.GetString(6),
+			WorkplaceId = reader.GetInt32(3),
+			WorkplaceName = reader.GetString(4),
+			SupervisorId = await reader.IsDBNullAsync(5) ? null : reader.GetInt32(5),
+			SupervisorName = await reader.IsDBNullAsync(6) ? null : reader.GetString(6),
 			HireDate = DateOnly.FromDateTime(reader.GetDateTime(7)),
 			Position = reader.GetString(8),
 			Wage = reader.GetDecimal(9),
@@ -70,72 +86,68 @@ internal static partial class DatabaseApi {
 
 		return data;
 	}
-	public static async Task<Employee> SelectEmployee(int employee_id) {
+	public static async Task<Employee> SelectEmployee(int id) {
 		await using var dataSource = Builder.Build();
 		await using var command = dataSource.CreateCommand("""
-			SELECT "person_id", "supervisor_id", "workplace_id",
-			 "hire_date", "position", "wage"
+			SELECT "person_id", "workplace_id", "hire_date",
+			"position", "wage"
 			FROM "public"."employee"
 			WHERE "person_id" = @person_id
 			""");
-		command.Parameters.Add(new NpgsqlParameter<int>("person_id", employee_id));
+		command.Parameters.Add(new NpgsqlParameter<int>("person_id", id));
 
 		using var reader = await command.ExecuteReaderAsync();
 		await reader.ReadAsync();
 		var data = new Employee {
 			Person = await DatabaseApi.SelectPerson(reader.GetInt32(0)),
-			Supervisor = await reader.IsDBNullAsync(1) ? null : await DatabaseApi.SelectEmployeeView(reader.GetInt32(1)),
-			Workplace = await DatabaseApi.SelectWorkplaceView(reader.GetInt32(2)),
-			HireDate = DateOnly.FromDateTime(reader.GetDateTime(3)),
-			Position = reader.GetString(4),
-			Wage= reader.GetDecimal(5),
+			Workplace = await DatabaseApi.SelectWorkplaceView(reader.GetInt32(1)),
+			HireDate = DateOnly.FromDateTime(reader.GetDateTime(2)),
+			Position = reader.GetString(3),
+			Wage= reader.GetDecimal(4),
 		};
 
 		return data;
 	}
-	public static async Task InsertEmployee(Employee data) {
-		await using var dataSource = Builder.Build();
-		await using var command = dataSource.CreateCommand("""
-			INSERT INTO "public"."employee"("person_id", "supervisor_id", "workplace_id",
-			 "hire_date", "position", "wage") 
-			VALUES(@person_id, @supervisor_id, @workplace_id,
-			 @hire_date, @position, @wage)
-			""");
-		command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
-		command.Parameters.Add(new NpgsqlParameter<int?>("supervisor_id", data.Supervisor?.EmployeeId));
-		command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
-		command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
-		command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
-		command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
-		command.ExecuteNonQuery();
-	}
-	public static async Task UpdateEmployee(Employee data) {
-		await using var dataSource = Builder.Build();
-		await using var command = dataSource.CreateCommand("""
-			UPDATE "public"."employee"
-			SET "supervisor_id" = @supervisor_id,
-			 "workplace_id" = @workplace_id,
-			 "hire_date" = @hire_date,
-			 "position" = @position,
-			 "wage" = @wage
-			WHERE "person_id" = @person_id;
-			""");
-		command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
-		command.Parameters.Add(new NpgsqlParameter<int?>("supervisor_id", data.Supervisor?.EmployeeId));
-		command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
-		command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
-		command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
-		command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
-		command.ExecuteNonQuery();
-	}
-	public static async Task DeleteEmployeeBulk(List<int> list) {
-		await using var dataSource = Builder.Build();
-		await using var command = dataSource.CreateCommand("""
-			DELETE FROM "public"."employee" WHERE "person_id" = ANY(@list)
-			""");
-		command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
-		command.ExecuteNonQuery();
-	}
+	//public static async Task InsertEmployee(Employee data) {
+	//	await using var dataSource = Builder.Build();
+	//	await using var command = dataSource.CreateCommand("""
+	//		INSERT INTO "public"."employee"("person_id", "workplace_id",
+	//		 "hire_date", "position", "wage") 
+	//		VALUES(@person_id, @workplace_id,
+	//		 @hire_date, @position, @wage)
+	//		""");
+	//	command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
+	//	command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
+	//	command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
+	//	command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
+	//	command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
+	//	command.ExecuteNonQuery();
+	//}
+	//public static async Task UpdateEmployee(Employee data) {
+	//	await using var dataSource = Builder.Build();
+	//	await using var command = dataSource.CreateCommand("""
+	//		UPDATE "public"."employee"
+	//		SET "workplace_id" = @workplace_id,
+	//		 "hire_date" = @hire_date,
+	//		 "position" = @position,
+	//		 "wage" = @wage
+	//		WHERE "person_id" = @person_id;
+	//		""");
+	//	command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
+	//	command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
+	//	command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
+	//	command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
+	//	command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
+	//	command.ExecuteNonQuery();
+	//}
+	//public static async Task DeleteEmployeeBulk(List<int> list) {
+	//	await using var dataSource = Builder.Build();
+	//	await using var command = dataSource.CreateCommand("""
+	//		DELETE FROM "public"."employee" WHERE "person_id" = ANY(@list)
+	//		""");
+	//	command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
+	//	command.ExecuteNonQuery();
+	//}
 }
 
 public record EmployeeView {
@@ -152,7 +164,6 @@ public record EmployeeView {
 }
 public record Employee {
 	public required Person Person { get; set; }
-	public required EmployeeView? Supervisor { get; set; }
 	public required WorkplaceView Workplace { get; set; }
 	public required DateOnly HireDate { get; set; }
 	public required string Position { get; set; }
