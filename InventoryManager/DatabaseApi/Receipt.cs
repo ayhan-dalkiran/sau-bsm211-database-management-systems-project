@@ -214,31 +214,56 @@ internal static partial class DatabaseApi {
 			INSERT INTO "public"."receipt"("customer_id", "e_archive_receipt_id", "order_date") 
 			VALUES (@customer_id, @e_archive_receipt_id, @order_date);
 			""");
+
 		command.Parameters.Add(new NpgsqlParameter<int>("customer_id", data.Customer.Id));
-		command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
-		command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
-		command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
-		command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
+		command.Parameters.Add(new NpgsqlParameter<string>("e_archive_receipt_id", data.EArchiveReceiptId));
+		command.Parameters.Add(new NpgsqlParameter<DateTime>("order_date", data.OrderDate));
+		command.ExecuteNonQuery();
+	}
+	public static async Task InsertReceiptItem(ReceiptItem data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			INSERT INTO "public"."receipt_item" ("receipt_id", "item_id", "count", "cost") 
+			VALUES (@receipt_id, @item_id, @count, @cost);
+			""");
+
+		command.Parameters.Add(new NpgsqlParameter<int>("receipt_id", data.Receipt.Id));
+		command.Parameters.Add(new NpgsqlParameter<int>("item_id", data.Item.Id));
+		command.Parameters.Add(new NpgsqlParameter<long>("count", data.Count));
+		command.Parameters.Add(new NpgsqlParameter<decimal>("cost", data.Cost));
 		command.ExecuteNonQuery();
 	}
 
-	public static async Task UpdateEmployee(Employee data) {
+	public static async Task UpdateReceipt(Receipt data) {
 		await using var dataSource = Builder.Build();
 		await using var command = dataSource.CreateCommand("""
-			UPDATE "public"."employee"
-			SET "supervisor_id" = @supervisor_id,
-			 "workplace_id" = @workplace_id,
-			 "hire_date" = @hire_date,
-			 "position" = @position,
-			 "wage" = @wage
-			WHERE "person_id" = @person_id;
+			UPDATE "public"."receipt" SET
+				       "customer_id" = @customer_id,
+				"e_archive_receipt_id" = @e_archive_receipt_id,
+				        "order_date" = @order_date
+			WHERE
+				                "id" = @id;
 			""");
-		command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
-		command.Parameters.Add(new NpgsqlParameter<int?>("supervisor_id", data.Supervisor?.EmployeeId));
-		command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
-		command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
-		command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
-		command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
+
+		command.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
+		command.Parameters.Add(new NpgsqlParameter<int>("customer_id", data.Customer.Id));
+		command.Parameters.Add(new NpgsqlParameter<string>("e_archive_receipt_id", data.EArchiveReceiptId));
+		command.Parameters.Add(new NpgsqlParameter<DateTime>("order_date", data.OrderDate));
+		command.ExecuteNonQuery();
+	}
+	public static async Task UpdateReceiptItem(ReceiptItem data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			UPDATE "public"."receiptItem" SET
+				       "count" = @count,
+				"cost" = @cost,
+			WHERE
+				                "receipt_id" = @receipt_id;
+			""");
+
+		command.Parameters.Add(new NpgsqlParameter<int>("receipt_id", data.Receipt.Id));
+		command.Parameters.Add(new NpgsqlParameter<long>("count", data.Count));
+		command.Parameters.Add(new NpgsqlParameter<decimal>("cost", data.Cost));
 		command.ExecuteNonQuery();
 	}
 

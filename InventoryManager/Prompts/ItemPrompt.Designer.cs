@@ -74,7 +74,7 @@ partial class ItemPrompt {
 		this.entityIdLabel.Dock = DockStyle.Fill;
 		this.entityIdLabel.Location = new Point(3, 0);
 		this.entityIdLabel.Name = "entityIdLabel";
-		this.entityIdLabel.Size = new Size(102, 29);
+		this.entityIdLabel.Size = new Size(85, 29);
 		this.entityIdLabel.TabIndex = 2;
 		this.entityIdLabel.Text = "Kalem No:";
 		this.entityIdLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -83,10 +83,10 @@ partial class ItemPrompt {
 		// 
 		this.entityIdBox.Dock = DockStyle.Fill;
 		this.entityIdBox.Enabled = false;
-		this.entityIdBox.Location = new Point(111, 3);
+		this.entityIdBox.Location = new Point(94, 3);
 		this.entityIdBox.Name = "entityIdBox";
 		this.entityIdBox.ReadOnly = true;
-		this.entityIdBox.Size = new Size(686, 23);
+		this.entityIdBox.Size = new Size(703, 23);
 		this.entityIdBox.TabIndex = 0;
 		this.entityIdBox.Text = "0";
 		// 
@@ -96,7 +96,7 @@ partial class ItemPrompt {
 		this.entityNameLabel.Dock = DockStyle.Fill;
 		this.entityNameLabel.Location = new Point(3, 29);
 		this.entityNameLabel.Name = "entityNameLabel";
-		this.entityNameLabel.Size = new Size(102, 29);
+		this.entityNameLabel.Size = new Size(85, 29);
 		this.entityNameLabel.TabIndex = 4;
 		this.entityNameLabel.Text = "Kalem Adı:";
 		this.entityNameLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -104,10 +104,10 @@ partial class ItemPrompt {
 		// entityNameBox
 		// 
 		this.entityNameBox.Dock = DockStyle.Fill;
-		this.entityNameBox.Location = new Point(111, 32);
+		this.entityNameBox.Location = new Point(94, 32);
 		this.entityNameBox.MaxLength = 100;
 		this.entityNameBox.Name = "entityNameBox";
-		this.entityNameBox.Size = new Size(686, 23);
+		this.entityNameBox.Size = new Size(703, 23);
 		this.entityNameBox.TabIndex = 1;
 		// 
 		// telephoneNumberLabel
@@ -116,29 +116,29 @@ partial class ItemPrompt {
 		this.telephoneNumberLabel.Dock = DockStyle.Fill;
 		this.telephoneNumberLabel.Location = new Point(3, 58);
 		this.telephoneNumberLabel.Name = "telephoneNumberLabel";
-		this.telephoneNumberLabel.Size = new Size(102, 29);
+		this.telephoneNumberLabel.Size = new Size(85, 29);
 		this.telephoneNumberLabel.TabIndex = 6;
-		this.telephoneNumberLabel.Text = "Telefon Numarası:";
+		this.telephoneNumberLabel.Text = "Üretici Firma:";
 		this.telephoneNumberLabel.TextAlign = ContentAlignment.MiddleRight;
 		// 
 		// telephoneNumberBox
 		// 
 		this.telephoneNumberBox.Dock = DockStyle.Fill;
-		this.telephoneNumberBox.Location = new Point(111, 61);
+		this.telephoneNumberBox.Location = new Point(94, 61);
 		this.telephoneNumberBox.Mask = "(000) 000 0000";
 		this.telephoneNumberBox.Name = "telephoneNumberBox";
 		this.telephoneNumberBox.ResetOnSpace = false;
-		this.telephoneNumberBox.Size = new Size(686, 23);
+		this.telephoneNumberBox.Size = new Size(703, 23);
 		this.telephoneNumberBox.TabIndex = 2;
 		this.telephoneNumberBox.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
 		// 
 		// addressBox
 		// 
 		this.addressBox.Dock = DockStyle.Fill;
-		this.addressBox.Location = new Point(111, 90);
+		this.addressBox.Location = new Point(94, 90);
 		this.addressBox.MaxLength = 200;
 		this.addressBox.Name = "addressBox";
-		this.addressBox.Size = new Size(686, 23);
+		this.addressBox.Size = new Size(703, 23);
 		this.addressBox.TabIndex = 3;
 		// 
 		// addressLabel
@@ -147,7 +147,7 @@ partial class ItemPrompt {
 		this.addressLabel.Dock = DockStyle.Fill;
 		this.addressLabel.Location = new Point(3, 87);
 		this.addressLabel.Name = "addressLabel";
-		this.addressLabel.Size = new Size(102, 29);
+		this.addressLabel.Size = new Size(85, 29);
 		this.addressLabel.TabIndex = 8;
 		this.addressLabel.Text = "Adres:";
 		this.addressLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -192,11 +192,11 @@ partial class ItemPrompt {
 		// 
 		this.nationalIdBox.Dock = DockStyle.Fill;
 		this.nationalIdBox.Enabled = false;
-		this.nationalIdBox.Location = new Point(111, 177);
+		this.nationalIdBox.Location = new Point(94, 177);
 		this.nationalIdBox.Mask = "00000000000";
 		this.nationalIdBox.Name = "nationalIdBox";
 		this.nationalIdBox.ResetOnSpace = false;
-		this.nationalIdBox.Size = new Size(686, 23);
+		this.nationalIdBox.Size = new Size(703, 23);
 		this.nationalIdBox.TabIndex = 6;
 		this.nationalIdBox.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
 		// 
@@ -204,11 +204,11 @@ partial class ItemPrompt {
 		// 
 		this.mersisIdBox.Dock = DockStyle.Fill;
 		this.mersisIdBox.Enabled = false;
-		this.mersisIdBox.Location = new Point(111, 148);
+		this.mersisIdBox.Location = new Point(94, 148);
 		this.mersisIdBox.Mask = "0000000000000000";
 		this.mersisIdBox.Name = "mersisIdBox";
 		this.mersisIdBox.ResetOnSpace = false;
-		this.mersisIdBox.Size = new Size(686, 23);
+		this.mersisIdBox.Size = new Size(703, 23);
 		this.mersisIdBox.TabIndex = 5;
 		this.mersisIdBox.TextMaskFormat = MaskFormat.ExcludePromptAndLiterals;
 		// 
@@ -218,7 +218,7 @@ partial class ItemPrompt {
 		this.nationalIdLabel.Dock = DockStyle.Fill;
 		this.nationalIdLabel.Location = new Point(3, 174);
 		this.nationalIdLabel.Name = "nationalIdLabel";
-		this.nationalIdLabel.Size = new Size(102, 29);
+		this.nationalIdLabel.Size = new Size(85, 29);
 		this.nationalIdLabel.TabIndex = 16;
 		this.nationalIdLabel.Text = "T.C. Kimlik No:";
 		this.nationalIdLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -229,7 +229,7 @@ partial class ItemPrompt {
 		this.mersisIdLabel.Dock = DockStyle.Fill;
 		this.mersisIdLabel.Location = new Point(3, 145);
 		this.mersisIdLabel.Name = "mersisIdLabel";
-		this.mersisIdLabel.Size = new Size(102, 29);
+		this.mersisIdLabel.Size = new Size(85, 29);
 		this.mersisIdLabel.TabIndex = 13;
 		this.mersisIdLabel.Text = "Mersis No:";
 		this.mersisIdLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -240,7 +240,7 @@ partial class ItemPrompt {
 		this.entityTypeLabel.Dock = DockStyle.Fill;
 		this.entityTypeLabel.Location = new Point(3, 116);
 		this.entityTypeLabel.Name = "entityTypeLabel";
-		this.entityTypeLabel.Size = new Size(102, 29);
+		this.entityTypeLabel.Size = new Size(85, 29);
 		this.entityTypeLabel.TabIndex = 11;
 		this.entityTypeLabel.Text = "Varlık Tipi:";
 		this.entityTypeLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -266,9 +266,9 @@ partial class ItemPrompt {
 		this.entityTypeBox.DropDownStyle = ComboBoxStyle.DropDownList;
 		this.entityTypeBox.FormattingEnabled = true;
 		this.entityTypeBox.Items.AddRange(new object[] { "Firma", "Kişi" });
-		this.entityTypeBox.Location = new Point(111, 119);
+		this.entityTypeBox.Location = new Point(94, 119);
 		this.entityTypeBox.Name = "entityTypeBox";
-		this.entityTypeBox.Size = new Size(686, 23);
+		this.entityTypeBox.Size = new Size(703, 23);
 		this.entityTypeBox.TabIndex = 4;
 		this.entityTypeBox.SelectedIndexChanged += this.entityTypeBox_SelectedIndexChanged;
 		// 

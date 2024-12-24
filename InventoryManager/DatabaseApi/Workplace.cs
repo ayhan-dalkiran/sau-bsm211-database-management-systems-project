@@ -296,6 +296,64 @@ internal static partial class DatabaseApi {
 
 		return data;
 	}
+
+	public static async Task InsertWarehouse(Warehouse data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public"."insert_warehouse"(@workplace_name, @telephone_number, @address, @warehouse_volume)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<string>("workplace_name", data.WorkplaceName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<long>("warehouse_volume", data.WarehouseVolume));
+		command.ExecuteNonQuery();
+	}
+	public static async Task InsertOffice(Office data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public"."insert_office"(@entity_name, @telephone_number, @address, @floor_count, @floor_size)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<string>("workplace_name", data.WorkplaceName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<long>("national_id", data.FloorCount));
+		command.Parameters.Add(new NpgsqlParameter<long>("national_id", data.FloorSize));
+		command.ExecuteNonQuery();
+	}
+
+	public static async Task UpdateCompany(Company data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public"."update_warehouse"(@entity_id ,@entity_name, @telephone_number, @address, @mersis_id)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<int>("entity_id", data.Id));
+		command.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<string>("mersis_id", data.MersisId));
+		command.ExecuteNonQuery();
+	}
+	public static async Task UpdateOffice(Person data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public"."update_office"(@entity_id, @entity_name, @telephone_number, @address, @national_id)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<int>("entity_id", data.Id));
+		command.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<string>("national_id", data.NationalId));
+		command.ExecuteNonQuery();
+	}
+
+	public static async Task DeleteWorkplaceBulk(List<int> list) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			DELETE FROM "public"."workplace" WHERE "id" = ANY(@list)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
+		command.ExecuteNonQuery();
+	}
 }
 
 public enum WorkplaceType : int {

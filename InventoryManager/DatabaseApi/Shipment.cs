@@ -54,7 +54,6 @@ internal static partial class DatabaseApi {
 
 		return list;
 	}
-
 	public static async Task<BindingList<ShipmentItemView>> SelectShipmentItemViewBulk() {
 		await using var dataSource = Builder.Build();
 		await using var command = dataSource.CreateCommand("""
@@ -132,7 +131,6 @@ internal static partial class DatabaseApi {
 
 		return data;
 	}
-
 	public static async Task<ShipmentItemView> SelectShipmentItemView(int receipt_id) {
 		await using var dataSource = Builder.Build();
 		await using var command = dataSource.CreateCommand("""
@@ -168,6 +166,7 @@ internal static partial class DatabaseApi {
 
 		return data;
 	}
+
 	public static async Task<Shipment> SelectShipment(int id) {
 		await using var dataSource = Builder.Build();
 		await using var command = dataSource.CreateCommand("""
@@ -219,6 +218,82 @@ internal static partial class DatabaseApi {
 		};
 
 		return data;
+	}
+
+	public static async Task InsertShipment(Shipment data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			INSERT INTO "public"."shipment"("supplier_id", "warehouse_id", "order_date") 
+			VALUES (@supplier_id, @warehouse_id, @order_date);
+			""");
+
+		command.Parameters.Add(new NpgsqlParameter<int>("supplier_id", data.Supplier.Id));
+		command.Parameters.Add(new NpgsqlParameter<int>("warehouse_id", data.Warehouse.Id));
+		command.Parameters.Add(new NpgsqlParameter<DateTime>("order_date", data.OrderDate));
+		command.ExecuteNonQuery();
+	}
+	public static async Task InsertShipmentItem(ShipmentItem data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			INSERT INTO "public"."shipment_item" ("shipment_id", "item_id", "count", "cost") 
+			VALUES (@shipment_id, @item_id, @count, @cost);
+			""");
+
+		command.Parameters.Add(new NpgsqlParameter<int>("receipt_id", data.Shipment.Id));
+		command.Parameters.Add(new NpgsqlParameter<int>("item_id", data.Item.Id));
+		command.Parameters.Add(new NpgsqlParameter<long>("count", data.Count));
+		command.Parameters.Add(new NpgsqlParameter<decimal>("cost", data.Cost));
+		command.ExecuteNonQuery();
+	}
+
+	public static async Task UpdateShipment(Shipment data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			UPDATE "public"."shipment" SET
+				       "supplier_id" = @supplier_id,
+				"warehouse_id" = @warehouse_id,
+				        "order_date" = @order_date
+			WHERE
+				                "id" = @id;
+			""");
+
+		command.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
+		command.Parameters.Add(new NpgsqlParameter<int>("supplier_id", data.Supplier.Id));
+		command.Parameters.Add(new NpgsqlParameter<int>("warehouse_id", data.Warehouse.Id));
+		command.Parameters.Add(new NpgsqlParameter<DateTime>("order_date", data.OrderDate));
+		command.ExecuteNonQuery();
+	}
+	public static async Task UpdateShipmentItem(ShipmentItem data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			UPDATE "public"."shipment_item" SET
+				       "count" = @count,
+				"cost" = @cost,
+			WHERE
+				                "shipment_id" = @shipment_id;
+			""");
+
+		command.Parameters.Add(new NpgsqlParameter<int>("shipment_id", data.Shipment.Id));
+		command.Parameters.Add(new NpgsqlParameter<long>("count", data.Count));
+		command.Parameters.Add(new NpgsqlParameter<decimal>("cost", data.Cost));
+		command.ExecuteNonQuery();
+	}
+
+	public static async Task DeleteShipmentBulk(List<int> list) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			DELETE FROM "public"."shipment" WHERE "person_id" = ANY(@list)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
+		command.ExecuteNonQuery();
+	}
+	public static async Task DeleteShipmentItemBulk(List<int> list) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			DELETE FROM "public"."shipment_item" WHERE "person_id" = ANY(@list)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
+		command.ExecuteNonQuery();
 	}
 }
 
