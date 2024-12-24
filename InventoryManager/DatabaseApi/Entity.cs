@@ -261,116 +261,62 @@ internal static partial class DatabaseApi {
 		return data;
 	}
 
-	//public static async Task InsertCompany(Company data) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var batch = dataSource.CreateBatch();
-	//	var command1 = batch.CreateBatchCommand();
-	//	command1.CommandText = """
-	//		INSERT INTO "public"."entity"("id", "entity_name", "telephone_number",
-	//		 "address", "entity_type") 
-	//		VALUES(@id, @entity_name, @telephone_number,
-	//		 @address, @entity_type)
-	//		""";
-	//	command1.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
-	//	command1.Parameters.Add(new NpgsqlParameter<EntityType>("entity_type", EntityType.Company));
-	//	var command2 = batch.CreateBatchCommand();
-	//	command2.CommandText = """
-	//		INSERT INTO "public"."company"("entity_id", "mersis_id") 
-	//		VALUES(@entity_id, @mersis_id)
-	//		""";
-	//	command2.Parameters.Add(new NpgsqlParameter<int>("entity_id", data.Id));
-	//	command2.Parameters.Add(new NpgsqlParameter<string>("mersis_id", data.MersisId));
-	//	await batch.ExecuteNonQueryAsync();
-	//}
-	//public static async Task InsertPerson(Person data) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var batch = dataSource.CreateBatch();
-	//	var command1 = batch.CreateBatchCommand();
-	//	command1.CommandText = """
-	//		INSERT INTO "public"."entity"("id", "entity_name", "telephone_number",
-	//		 "address", "entity_type") 
-	//		VALUES(@id, @entity_name, @telephone_number,
-	//		 @address, @entity_type)
-	//		""";
-	//	command1.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
-	//	command1.Parameters.Add(new NpgsqlParameter<EntityType>("entity_type", EntityType.Person));
-	//	var command2 = batch.CreateBatchCommand();
-	//	command2.CommandText = """
-	//		INSERT INTO "public"."company"("entity_id", "mersis_id") 
-	//		VALUES(@entity_id, @mersis_id)
-	//		""";
-	//	command2.Parameters.Add(new NpgsqlParameter<int>("entity_id", data.Id));
-	//	command2.Parameters.Add(new NpgsqlParameter<string>("mersis_id", data.NationalId));
-	//	await batch.ExecuteNonQueryAsync();
-	//}
+	public static async Task InsertCompany(Company data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public."insert_company"(@entity_name, @telephone_number, @address, @mersis_id)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<string>("mersis_id", data.MersisId));
+		command.ExecuteNonQuery();
+	}
+	public static async Task InsertPerson(Person data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public."insert_person"(@entity_name, @telephone_number, @address, @national_id)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<string>("national_id", data.NationalId));
+		command.ExecuteNonQuery();
+	}
 
-	//public static async Task UpdateCompany(Company data) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var batch = dataSource.CreateBatch();
-	//	var command1 = batch.CreateBatchCommand();
-	//	command1.CommandText = """
-	//		UPDATE "public"."entity"
-	//		SET
-	//		 "entity_name" = @entity_name,
-	//		 "telephone_number" = @telephone_number,
-	//		 "address" = @address,
-	//		WHERE "id" = @id
-	//		""";
-	//	command1.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
-	//	var command2 = batch.CreateBatchCommand();
-	//	command2.CommandText = """
-	//		UPDATE "public"."company"
-	//		SET "mersis_id" = @mersis_id,
-	//		WHERE "id" = @id
-	//		""";
-	//	command2.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
-	//	command2.Parameters.Add(new NpgsqlParameter<string>("mersis_id", data.MersisId));
-	//	await batch.ExecuteNonQueryAsync();
-	//}
-	//public static async Task UpdatePerson(Person data) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var batch = dataSource.CreateBatch();
-	//	var command1 = batch.CreateBatchCommand();
-	//	command1.CommandText = """
-	//		UPDATE "public"."entity"
-	//		SET
-	//		 "entity_name" = @entity_name,
-	//		 "telephone_number" = @telephone_number,
-	//		 "address" = @address,
-	//		WHERE "id" = @id
-	//		""";
-	//	command1.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
-	//	command1.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
-	//	var command2 = batch.CreateBatchCommand();
-	//	command2.CommandText = """
-	//		UPDATE "public"."person"
-	//		SET "national_id" = @national_id,
-	//		WHERE "id" = @id
-	//		""";
-	//	command2.Parameters.Add(new NpgsqlParameter<int>("id", data.Id));
-	//	command2.Parameters.Add(new NpgsqlParameter<string>("mersis_id", data.NationalId));
-	//	await batch.ExecuteNonQueryAsync();
-	//}
+	public static async Task UpdateCompany(Company data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public."update_company"(@entity_id ,@entity_name, @telephone_number, @address, @mersis_id)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<int>("entity_id", data.Id));
+		command.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<string>("mersis_id", data.MersisId));
+		command.ExecuteNonQuery();
+	}
+	public static async Task UpdatePerson(Person data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			CALL "public."update_person"(@entity_name, @telephone_number, @address, @national_id)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<int>("entity_id", data.Id));
+		command.Parameters.Add(new NpgsqlParameter<string>("entity_name", data.EntityName));
+		command.Parameters.Add(new NpgsqlParameter<string>("telephone_number", data.TelephoneNumber));
+		command.Parameters.Add(new NpgsqlParameter<string>("address", data.Address));
+		command.Parameters.Add(new NpgsqlParameter<string>("national_id", data.NationalId));
+		command.ExecuteNonQuery();
+	}
 
-	//public static async Task DeleteEntityBulk(List<int> list) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var command = dataSource.CreateCommand("""
-	//		DELETE FROM "public"."entity" WHERE "id" = ANY(@list)
-	//		""");
-	//	command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
-	//	command.ExecuteNonQuery();
-	//}
+	public static async Task DeleteEntityBulk(List<int> list) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			DELETE FROM "public"."entity" WHERE "id" = ANY(@list)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
+		command.ExecuteNonQuery();
+	}
 }
 
 public enum EntityType : int {

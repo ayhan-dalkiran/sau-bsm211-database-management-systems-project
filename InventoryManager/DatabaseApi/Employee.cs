@@ -108,46 +108,47 @@ internal static partial class DatabaseApi {
 
 		return data;
 	}
-	//public static async Task InsertEmployee(Employee data) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var command = dataSource.CreateCommand("""
-	//		INSERT INTO "public"."employee"("person_id", "workplace_id",
-	//		 "hire_date", "position", "wage") 
-	//		VALUES(@person_id, @workplace_id,
-	//		 @hire_date, @position, @wage)
-	//		""");
-	//	command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
-	//	command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
-	//	command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
-	//	command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
-	//	command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
-	//	command.ExecuteNonQuery();
-	//}
-	//public static async Task UpdateEmployee(Employee data) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var command = dataSource.CreateCommand("""
-	//		UPDATE "public"."employee"
-	//		SET "workplace_id" = @workplace_id,
-	//		 "hire_date" = @hire_date,
-	//		 "position" = @position,
-	//		 "wage" = @wage
-	//		WHERE "person_id" = @person_id;
-	//		""");
-	//	command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
-	//	command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
-	//	command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
-	//	command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
-	//	command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
-	//	command.ExecuteNonQuery();
-	//}
-	//public static async Task DeleteEmployeeBulk(List<int> list) {
-	//	await using var dataSource = Builder.Build();
-	//	await using var command = dataSource.CreateCommand("""
-	//		DELETE FROM "public"."employee" WHERE "person_id" = ANY(@list)
-	//		""");
-	//	command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
-	//	command.ExecuteNonQuery();
-	//}
+
+	public static async Task InsertEmployee(Employee data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			INSERT INTO "public"."employee" ( "workplace_id", "hire_date", "wage", "position") 
+			VALUES ( @workplace_id, @hire_date, @wage, @position );
+			""");
+		command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
+		command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
+		command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
+		command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
+		command.ExecuteNonQuery();
+	}
+
+	public static async Task UpdateEmployee(Employee data) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			UPDATE "public"."employee" SET
+				"workplace_id" = @workplace_id,
+				  "hire_date" = @hire_date,
+				       "wage" = @wage,
+				   "position" = @position
+			WHERE
+				  "person_id" = @person_id;
+			""");
+		command.Parameters.Add(new NpgsqlParameter<int>("person_id", data.Person.Id));
+		command.Parameters.Add(new NpgsqlParameter<int>("workplace_id", data.Workplace.Id));
+		command.Parameters.Add(new NpgsqlParameter<DateOnly>("hire_date", data.HireDate));
+		command.Parameters.Add(new NpgsqlParameter<decimal>("wage", data.Wage));
+		command.Parameters.Add(new NpgsqlParameter<string>("position", data.Position));
+		command.ExecuteNonQuery();
+	}
+
+	public static async Task DeleteEmployeeBulk(List<int> list) {
+		await using var dataSource = Builder.Build();
+		await using var command = dataSource.CreateCommand("""
+			DELETE FROM "public"."employee" WHERE "person_id" = ANY(@list)
+			""");
+		command.Parameters.Add(new NpgsqlParameter<List<int>>("list", list));
+		command.ExecuteNonQuery();
+	}
 }
 
 public record EmployeeView {
